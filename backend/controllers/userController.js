@@ -1,4 +1,5 @@
 const { prisma } = require("../database/db.config");
+const { setUser } = require("../service/auth");
 
 const handleUserSignup = async (req, res) => {
   const { username, email, password } = req.body;
@@ -29,16 +30,24 @@ const handleUserSignup = async (req, res) => {
 };
 
 const handleUserLogin = async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  const findUser = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
-      email: email,
+      username: username,
       password: password,
     },
   });
 
-  if (findUser) {
+  if (user) {
+    const token = setUser(user);
+    console.log("token is ", token);
+    res.cookie("uid", token, {
+      httpOnly: true, // Prevents client-side JS from accessing the cookie
+      secure: false, // Set to true if using HTTPS
+      sameSite: "None", // Adjust to your needs ('lax', 'strict', 'none')
+      path: "/",
+    });
     return res.json({ status: 200, message: "User authenticated" });
   }
   return res.json({ status: 401, message: "Unauthorised" });
