@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -12,7 +13,7 @@ const corsOptions = {
   allowedHeaders: "Content-Type", // Allow only these headers
   credentials: true,
 };
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
 app.use(cors(corsOptions));
