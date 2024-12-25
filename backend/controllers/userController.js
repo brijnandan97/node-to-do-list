@@ -11,7 +11,7 @@ const handleUserSignup = async (req, res) => {
   });
 
   if (findUser) {
-    return res.json({ status: 400, message: "Email already exists!" });
+    return res.status(400).json({ message: "Email already exists!" });
   }
 
   const newUser = await prisma.user.create({
@@ -22,8 +22,7 @@ const handleUserSignup = async (req, res) => {
     },
   });
 
-  return res.json({
-    status: 200,
+  return res.status(200).json({
     data: newUser,
     message: "User created successfully",
   });
@@ -48,9 +47,9 @@ const handleUserLogin = async (req, res) => {
       sameSite: "None", // Adjust to your needs ('lax', 'strict', 'none')
       path: "/",
     });
-    return res.json({ status: 200, message: "User authenticated" });
+    return res.status(200).json({ message: "User authenticated" });
   }
-  return res.json({ status: 401, message: "Unauthorised" });
+  return res.status(401).json({ message: "Unauthorised" });
 };
 
 module.exports = {
