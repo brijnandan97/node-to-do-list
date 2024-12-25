@@ -91,7 +91,7 @@ const updateTodo = async (req, res) => {
     const { id, title, description, threshold, is_completed } = req.body; // Extract fields from the request body
 
     // Build the `data` object dynamically to update only provided fields
-    const updateData = {};
+    const updateData = { updated_at: new Date() };
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
     if (threshold !== undefined) updateData.threshold = new Date(threshold); // Ensure proper Date format
@@ -135,7 +135,7 @@ const deleteTodo = async (req, res) => {
 
     // Soft-delete the todo by setting is_active to false
     const deletedTodo = await prisma.todos.update({
-      where: { id },
+      where: { id, is_active: true },
       data: { is_active: false },
     });
 
